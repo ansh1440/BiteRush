@@ -16,6 +16,8 @@ BiteRush is a food delivery web app inspired by Swiggy, built as a personal proj
 
 ## 🚧 Backend In Progress
 
+Currently learning MySQL and backend development with Java + Spring Boot.
+
 Planned REST APIs:
 - `GET /restaurants`
 - `POST /place-order`
@@ -26,12 +28,11 @@ Planned REST APIs:
 - User authentication
 - Admin dashboard
 - Live order tracking (via WebSocket)
-
----
+--
 
 ## 🙋‍♂️ About Me
 
-I’m Ansh More, a backend-focused full stack developer passionate about building clean and scalable apps.
+I'm Ansh More, an aspiring full stack developer with a strong focus on backend development. I'm passionate about building clean, scalable applications and continuously sharpening my skills to become industry-ready.
 
-Connect on [LinkedIn](https://linkedin.com/in/your-link) | [Email Me](mailto:anshmore046@gmail.com)
+Connect on [Email Me](mailto:anshmore046@gmail.com)
 
