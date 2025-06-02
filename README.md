@@ -10,11 +10,11 @@ BiteRush is a food delivery web app inspired by Swiggy, built as a personal proj
 
 ## 🎥 Project Presentation
 
-[Watch the video here](https://youtu.be/your-video-link)
+[Watch the video here](BiteRush_Presentation)
 
 ## 📄 Resume
 
-[Download My Resume](Ansh_More_Resume.pdf)
+[Download My Resume](Ansh More's - Resume.pdf)
 
 ## 🚧 Backend In Progress
 
