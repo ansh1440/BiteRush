@@ -1,0 +1,20 @@
+.register-container {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.register-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(247, 147, 30, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 140, 0, 0.2) 0%, transparent 50%);
+    pointer-events: none;
+}
