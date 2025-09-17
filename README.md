@@ -115,8 +115,8 @@ npm start
 
 ## 🎯 Usage
 
-- **Admin Panel**: http://localhost:3000
-- **User Panel**: http://localhost:3001
+- **Admin Panel**: http://localhost:3001
+- **User Panel**: http://localhost:3000
 - **Backend API**: http://localhost:8080
 
 ## 📚 API Documentation
