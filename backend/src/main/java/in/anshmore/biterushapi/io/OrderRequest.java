@@ -18,4 +18,6 @@ public class OrderRequest {
     private String email;
     private String phoneNumber;
     private String orderStatus;
+    private String paymentStatus;
+    private String razorpayPaymentId;
 }

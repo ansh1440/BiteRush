@@ -107,6 +107,8 @@ public class OrderServiceImpl implements OrderService{
                 .email(request.getEmail())
                 .phoneNumber(request.getPhoneNumber())
                 .orderStatus(request.getOrderStatus())
+                .paymentStatus(request.getPaymentStatus())
+                .razorpayPaymentId(request.getRazorpayPaymentId())
                 .build();
     }
 }

@@ -15,6 +15,10 @@ export const StoreContextProvider = (props) => {
   const [token, setToken] = useState("");
 
   const increaseQty = async (foodId) => {
+    if (!token) {
+      alert('Please login to add items to cart');
+      return;
+    }
     setQuantities((prev) => ({ ...prev, [foodId]: (prev[foodId] || 0) + 1 }));
     try {
       await addToCart(foodId, token);

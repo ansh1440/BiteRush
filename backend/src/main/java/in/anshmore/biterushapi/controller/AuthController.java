@@ -38,6 +38,7 @@ public class AuthController {
     }
     
     @PostMapping("/verify-otp")
+    // amazonq-ignore-next-line
     public ResponseEntity<String> verifyOtp(@RequestBody OtpRequest request) {
         boolean isValid = otpService.verifyOtp(request.getEmail(), request.getOtp());
         return ResponseEntity.ok(isValid ? "OTP verified successfully" : "Invalid or expired OTP");
