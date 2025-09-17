@@ -1,5 +1,5 @@
 [phases.build]
-cmds = ["./mvnw clean package -DskipTests"]
-
-[phases.start]
-cmd = "java -Dspring.profiles.active=prod -Dserver.port=$PORT -jar target/biterushapi-0.0.1-SNAPSHOT.jar"
+cmds = [
+  'chmod +x ./mvnw',
+  './mvnw clean package -DskipTests'
+]
