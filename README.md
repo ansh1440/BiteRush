@@ -20,7 +20,7 @@ A complete food delivery application built with React.js frontend and Spring Boo
 - Add items to cart
 - Place orders
 - User authentication with OTP
-- Multiple payment options (PayPal, Razorpay)
+- Razorpay payment integration
 
 ## Technologies Used
 
@@ -76,6 +76,3 @@ npm start
 **Ansh More**
 - GitHub: [@ansh1440](https://github.com/ansh1440)
 
-## License
-
-This project is licensed under the MIT License.
