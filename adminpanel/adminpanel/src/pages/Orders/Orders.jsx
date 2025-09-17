@@ -9,9 +9,12 @@ const Orders = () => {
   const fetchOrders = async () => {
     try {
       const response = await fetchAllOrders();
-      setData(response);
+      console.log('Orders response:', response);
+      setData(response || []);
     } catch (error) {
+      console.error('Error fetching orders:', error);
       toast.error("Unable to display the orders. Please try again.");
+      setData([]);
     }
   };
 
@@ -20,15 +23,14 @@ const Orders = () => {
     if (success) await fetchOrders();
   };
 
-  // Fetch orders once on mount
   useEffect(() => {
     fetchOrders();
   }, []);
 
-  // Auto-refresh orders every 30 seconds
+  // Auto-refresh every 30 seconds
   useEffect(() => {
-    const interval = setInterval(fetchOrders, 30000); // 30000ms = 30 seconds
-    return () => clearInterval(interval); // cleanup on unmount
+    const interval = setInterval(fetchOrders, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -37,58 +39,52 @@ const Orders = () => {
         <div className="col-11 card">
           <table className="table table-responsive">
             <tbody>
-              {data.map((order, index) => {
+              {data && data.length > 0 ? data.map((order, index) => {
                 return (
                   <tr key={index}>
                     <td>
-                      <img
-                        src={assets.biterush}
-                        alt="Order"
-                        height={32}
-                        width={32}
-                      />
+                      <img src={assets.biterush} alt="Order" height={32} width={32}/>
                     </td>
                     <td>
                       <div>
-                        {order.orderedItems.map((item, itemIndex) => {
+                        {order.orderedItems && order.orderedItems.map((item, itemIndex) => {
                           if (itemIndex === order.orderedItems.length - 1) {
-                            return (
-                              <span key={itemIndex}>
-                                {item.name + " x " + item.quantity}
-                              </span>
-                            );
+                            return <span key={itemIndex}>{item.name + " x " + item.quantity}</span>;
                           } else {
-                            return (
-                              <span key={itemIndex}>
-                                {item.name + " x " + item.quantity + ", "}
-                              </span>
-                            );
+                            return <span key={itemIndex}>{item.name + " x " + item.quantity + ", "}</span>;
                           }
                         })}
                       </div>
-                      <div>
-                        {order.userAddress === "123 Main St"
-                          ? "502 5th Floor, Sunshine Plaza, Kailash Lassi Lane, near Dadar Railway Station, Dadar East, Dadar, Mumbai, Maharashtra 400014"
-                          : order.userAddress}
-                      </div>
+                      <div>{order.userAddress === '123 Main St' ? '502 5th Floor, Sunshine Plaza, Kailash Lassi Lane, near Dadar Railway Station, Dadar East, Dadar, Mumbai, Maharashtra 400014' : order.userAddress}</div>
                     </td>
-                    <td>&#x20B9;{order.amount.toFixed(2)}</td>
-                    <td>Items: {order.orderedItems.length}</td>
+                    <td>&#x20B9;{order.amount ? order.amount.toFixed(2) : '0.00'}</td>
+                    <td>Items: {order.orderedItems ? order.orderedItems.length : 0}</td>
                     <td>
                       <select
                         className="form-select"
-                        style={{ minWidth: "150px", fontSize: "14px" }}
+                        style={{minWidth: '150px', fontSize: '14px'}}
                         onChange={(event) => updateStatus(event, order.id)}
-                        value={order.orderStatus}
+                        value={order.orderStatus || 'Food Preparing'}
                       >
                         <option value="Food Preparing">Food Preparing</option>
-                        <option value="Out for delivery">Out for delivery</option>
+                        <option value="Out for delivery">
+                          Out for delivery
+                        </option>
                         <option value="Delivered">Delivered</option>
                       </select>
                     </td>
                   </tr>
                 );
-              })}
+              }) : (
+                <tr>
+                  <td colSpan="5" className="text-center py-4">
+                    <div className="text-muted">
+                      <i className="bi bi-inbox" style={{fontSize: '2rem'}}></i>
+                      <p className="mt-2">No orders found</p>
+                    </div>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

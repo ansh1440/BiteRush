@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { StoreContext } from "../../context/StoreContext";
+import { getImageUrl } from "../../util/imageUtils";
 import "./FoodItem.css";
 
 const FoodItem = ({ name, description, id, imageUrl, price }) => {
@@ -11,7 +12,7 @@ const FoodItem = ({ name, description, id, imageUrl, price }) => {
       <div className="card food-card" style={{ maxWidth: "320px" }}>
         <Link to={`/food/${id}`}>
           <img
-            src={imageUrl}
+            src={getImageUrl(imageUrl)}
             className="card-img-top"
             alt="Product Image"
             height={300}
@@ -40,7 +41,7 @@ const FoodItem = ({ name, description, id, imageUrl, price }) => {
           <Link className="btn btn-success btn-sm" to={`/food/${id}`}>
             View Food
           </Link>
-          {quantities[id] > 0 ? (
+          {quantities && quantities[id] > 0 ? (
             <div className="d-flex align-items-center gap-2">
               <button
                 className="btn btn-danger btn-sm"

@@ -1,0 +1,64 @@
+.place-order-container {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    padding: 20px 0;
+}
+
+.order-summary-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 20px;
+    position: sticky;
+    top: 20px;
+}
+
+.cart-item-row {
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-item-row:last-child {
+    border-bottom: none;
+}
+
+.billing-form {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 30px;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 12px;
+    font-size: 0.95rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.order-total {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+.free-delivery-text {
+    color: #28a745;
+    font-weight: 500;
+}
+
+.logo-section {
+    margin-bottom: 30px;
+}
+
+.logo-section img {
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}

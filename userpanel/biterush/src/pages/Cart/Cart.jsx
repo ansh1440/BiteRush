@@ -8,12 +8,11 @@ const Cart = () => {
   const navigate = useNavigate();
   const { foodList, increaseQty, decreaseQty, quantities, removeFromCart } =
     useContext(StoreContext);
-
-  // Cart items
+  //cart items
   const cartItems = foodList.filter((food) => quantities[food.id] > 0);
 
-  // Calculate totals using Swiggy-style logic
-  const { subtotal, deliveryFee, platformFee, totalGST, total } = calculateCartTotals(
+  //calculating
+  const { subtotal, deliveryFee, platformFee, foodGST, serviceGST, totalGST, total } = calculateCartTotals(
     cartItems,
     quantities
   );
@@ -54,7 +53,7 @@ const Cart = () => {
                         <input
                           style={{ maxWidth: "100px" }}
                           type="text"
-                          className="form-control form-control-sm text-center quantity-input"
+                          className="form-control  form-control-sm text-center quantity-input"
                           value={quantities[food.id]}
                           readOnly
                         />
@@ -95,8 +94,7 @@ const Cart = () => {
           <div className="card cart-summary">
             <div className="card-body">
               <h5 className="card-title mb-4">Order Summary</h5>
-
-              {/* Pricing Section */}
+              
               <div className="d-flex justify-content-between mb-3">
                 <span>Subtotal</span>
                 <span>&#8377;{subtotal.toFixed(2)}</span>
@@ -130,7 +128,6 @@ const Cart = () => {
                   &#8377;{subtotal === 0 ? "0.00" : total.toFixed(2)}
                 </strong>
               </div>
-
               <button
                 className="btn btn-primary w-100"
                 disabled={cartItems.length === 0}

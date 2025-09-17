@@ -46,8 +46,13 @@ export const StoreContextProvider = (props) => {
   };
 
   const loadCartData = async (token) => {
-    const items = await getCartData(token);
-    setQuantities(items);
+    try {
+      const items = await getCartData(token);
+      setQuantities(items || {});
+    } catch (error) {
+      console.error('Failed to load cart data:', error);
+      setQuantities({});
+    }
   };
 
   const contextValue = {
@@ -64,11 +69,16 @@ export const StoreContextProvider = (props) => {
 
   useEffect(() => {
     async function loadData() {
-      const data = await fetchFoodList();
-      setFoodList(data);
-      if (localStorage.getItem("token")) {
-        setToken(localStorage.getItem("token"));
-        await loadCartData(localStorage.getItem("token"));
+      try {
+        const data = await fetchFoodList();
+        setFoodList(data || []);
+        if (localStorage.getItem("token")) {
+          setToken(localStorage.getItem("token"));
+          await loadCartData(localStorage.getItem("token"));
+        }
+      } catch (error) {
+        console.error('Failed to load data:', error);
+        setFoodList([]);
       }
     }
     loadData();

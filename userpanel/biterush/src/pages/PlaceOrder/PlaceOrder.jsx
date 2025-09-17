@@ -4,13 +4,15 @@ import { assets } from "../../assets/assets";
 import { StoreContext } from "../../context/StoreContext";
 import { calculateCartTotals } from "../../util/cartUtils";
 import { toast } from "react-toastify";
-// Razorpay removed - no payment gateway integration
 import { useNavigate } from "react-router-dom";
-import { createOrder, deleteOrder } from "../../service/orderService";
+import { orderService } from "../../service/orderService";
 import { clearCartItems } from "../../service/cartService";
+import RazorpayButton from "../../components/RazorpayButton";
+
 
 const PlaceOrder = () => {
-  const { foodList, quantities, setQuantities, token } = useContext(StoreContext);
+  const { foodList, quantities, setQuantities, token } =
+    useContext(StoreContext);
   const navigate = useNavigate();
 
   const [data, setData] = useState({
@@ -30,50 +32,12 @@ const PlaceOrder = () => {
     setData((data) => ({ ...data, [name]: value }));
   };
 
-  const onSubmitHandler = async (event) => {
-    event.preventDefault();
-    const orderData = {
-      userAddress: `${data.firstName} ${data.lastName}, ${data.address}, ${data.city}, ${data.state}, ${data.zip}`,
-      phoneNumber: data.phoneNumber,
-      email: data.email,
-      orderedItems: cartItems.map((item) => ({
-        foodId: item.id.toString(),
-        quantity: quantities[item.id],
-        price: item.price * quantities[item.id],
-        category: item.category,
-        imageUrl: item.imageUrl,
-        description: item.description,
-        name: item.name,
-      })),
-      amount: total.toFixed(2),
-      orderStatus: "Preparing",
-    };
+  const cartItems = foodList.filter((food) => quantities[food.id] > 0);
 
-    try {
-      console.log("Order data:", orderData);
-      console.log("Token:", token);
-      const response = await createOrder(orderData, token);
-      if (response.id) {
-        toast.success("Order placed successfully!");
-        await clearCart();
-        navigate("/myorders");
-      } else {
-        toast.error("Unable to place order. Please try again.");
-      }
-    } catch (error) {
-      console.error("Order creation error:", error);
-      console.error("Error response:", error.response);
-      toast.error("Unable to place order. Please try again.");
-    }
-  };
-
-  const deleteOrderHandler = async (orderId) => {
-    try {
-      await deleteOrder(orderId, token);
-    } catch (error) {
-      toast.error("Something went wrong. Contact support.");
-    }
-  };
+  const { subtotal, deliveryFee, platformFee, totalGST, total } = calculateCartTotals(
+    cartItems,
+    quantities
+  );
 
   const clearCart = async () => {
     try {
@@ -83,14 +47,24 @@ const PlaceOrder = () => {
     }
   };
 
-  // Cart items
-  const cartItems = foodList.filter((food) => quantities[food.id] > 0);
+  const handlePaymentSuccess = async () => {
+    await clearCart();
+    navigate("/myorders");
+  };
 
-  // Calculate totals using Swiggy-style logic
-  const { subtotal, deliveryFee, platformFee, totalGST, total } = calculateCartTotals(
-    cartItems,
-    quantities
-  );
+  // 🔹 Check if the form is valid
+  const isFormValid = () => {
+    return (
+      data.firstName &&
+      data.lastName &&
+      data.email &&
+      data.phoneNumber &&
+      data.address &&
+      data.state &&
+      data.city &&
+      data.zip
+    );
+  };
 
   return (
     <div className="container mt-4">
@@ -99,7 +73,7 @@ const PlaceOrder = () => {
           <img
             className="d-block mx-auto"
             src={assets.logo}
-            alt=""
+            alt="Logo"
             width="98"
             height="98"
           />
@@ -108,7 +82,9 @@ const PlaceOrder = () => {
           <div className="col-md-5 col-lg-4 order-md-last">
             <h4 className="d-flex justify-content-between align-items-center mb-3">
               <span className="text-primary">Your cart</span>
-              <span className="badge bg-primary rounded-pill">{cartItems.length}</span>
+              <span className="badge bg-primary rounded-pill">
+                {cartItems.length}
+              </span>
             </h4>
             <ul className="list-group mb-3">
               {cartItems.map((item) => (
@@ -127,62 +103,41 @@ const PlaceOrder = () => {
                   </span>
                 </li>
               ))}
-
-              {/* Swiggy-style pricing section */}
               {deliveryFee > 0 && (
                 <li className="list-group-item d-flex justify-content-between">
-                  <div>
-                    <span>Delivery Fee</span>
-                  </div>
-                  <span className="text-body-secondary">
-                    &#8377;{deliveryFee.toFixed(2)}
-                  </span>
+                  <div><span>Delivery Fee</span></div>
+                  <span className="text-body-secondary">&#8377;{deliveryFee.toFixed(2)}</span>
                 </li>
               )}
               {subtotal >= 399 && deliveryFee === 0 && (
                 <li className="list-group-item d-flex justify-content-between text-success">
-                  <div>
-                    <span>Delivery Fee</span>
-                  </div>
-                  <span className="text-body-secondary">
-                    <s>&#8377;29.00</s> FREE
-                  </span>
+                  <div><span>Delivery Fee</span></div>
+                  <span className="text-body-secondary"><s>&#8377;29.00</s> FREE</span>
                 </li>
               )}
               {platformFee > 0 && (
                 <li className="list-group-item d-flex justify-content-between">
-                  <div>
-                    <span>Platform Fee</span>
-                  </div>
-                  <span className="text-body-secondary">
-                    &#8377;{platformFee.toFixed(2)}
-                  </span>
+                  <div><span>Platform Fee</span></div>
+                  <span className="text-body-secondary">&#8377;{platformFee.toFixed(2)}</span>
                 </li>
               )}
               <li className="list-group-item d-flex justify-content-between">
-                <div>
-                  <span>GST & Restaurant Charges</span>
-                </div>
-                <span className="text-body-secondary">
-                  &#8377;{totalGST.toFixed(2)}
-                </span>
+                <div><span>GST & Restaurant Charges</span></div>
+                <span className="text-body-secondary">&#8377;{totalGST.toFixed(2)}</span>
               </li>
-
               <li className="list-group-item d-flex justify-content-between">
                 <span>Total (INR)</span>
-                <strong>&#8377;{subtotal === 0 ? "0.00" : total.toFixed(2)}</strong>
+                <strong>&#8377;{total.toFixed(2)}</strong>
               </li>
             </ul>
           </div>
 
           <div className="col-md-7 col-lg-8">
             <h4 className="mb-3">Billing address</h4>
-            <form className="needs-validation" onSubmit={onSubmitHandler}>
+            <form className="needs-validation">
               <div className="row g-3">
                 <div className="col-sm-6">
-                  <label htmlFor="firstName" className="form-label">
-                    First name
-                  </label>
+                  <label htmlFor="firstName" className="form-label">First name</label>
                   <input
                     type="text"
                     className="form-control"
@@ -196,25 +151,21 @@ const PlaceOrder = () => {
                 </div>
 
                 <div className="col-sm-6">
-                  <label htmlFor="lastName" className="form-label">
-                    Last name
-                  </label>
+                  <label htmlFor="lastName" className="form-label">Last name</label>
                   <input
                     type="text"
                     className="form-control"
                     id="lastName"
                     placeholder="Doe"
+                    required
+                    name="lastName"
                     value={data.lastName}
                     onChange={onChangeHandler}
-                    name="lastName"
-                    required
                   />
                 </div>
 
                 <div className="col-12">
-                  <label htmlFor="email" className="form-label">
-                    Email
-                  </label>
+                  <label htmlFor="email" className="form-label">Email</label>
                   <div className="input-group has-validation">
                     <span className="input-group-text">@</span>
                     <input
@@ -224,45 +175,42 @@ const PlaceOrder = () => {
                       placeholder="Email"
                       required
                       name="email"
-                      onChange={onChangeHandler}
                       value={data.email}
+                      onChange={onChangeHandler}
                     />
                   </div>
                 </div>
+
                 <div className="col-12">
-                  <label htmlFor="phone" className="form-label">
-                    Phone Number
-                  </label>
+                  <label htmlFor="phone" className="form-label">Phone Number</label>
                   <input
                     type="number"
                     className="form-control"
                     id="phone"
                     placeholder="9876543210"
                     required
-                    value={data.phoneNumber}
                     name="phoneNumber"
+                    value={data.phoneNumber}
                     onChange={onChangeHandler}
                   />
                 </div>
+
                 <div className="col-12">
-                  <label htmlFor="address" className="form-label">
-                    Address
-                  </label>
+                  <label htmlFor="address" className="form-label">Address</label>
                   <input
                     type="text"
                     className="form-control"
                     id="address"
                     placeholder="1234 Main St"
                     required
-                    value={data.address}
                     name="address"
+                    value={data.address}
                     onChange={onChangeHandler}
                   />
                 </div>
+
                 <div className="col-md-5">
-                  <label htmlFor="state" className="form-label">
-                    State
-                  </label>
+                  <label htmlFor="state" className="form-label">State</label>
                   <select
                     className="form-select"
                     id="state"
@@ -284,9 +232,7 @@ const PlaceOrder = () => {
                 </div>
 
                 <div className="col-md-4">
-                  <label htmlFor="city" className="form-label">
-                    City
-                  </label>
+                  <label htmlFor="city" className="form-label">City</label>
                   <select
                     className="form-select"
                     id="city"
@@ -308,9 +254,7 @@ const PlaceOrder = () => {
                 </div>
 
                 <div className="col-md-3">
-                  <label htmlFor="zip" className="form-label">
-                    Pincode
-                  </label>
+                  <label htmlFor="zip" className="form-label">Pincode</label>
                   <input
                     type="number"
                     className="form-control"
@@ -325,15 +269,37 @@ const PlaceOrder = () => {
               </div>
 
               <hr className="my-4" />
-
-              <button
-                className="w-100 btn btn-primary btn-lg"
-                type="submit"
-                disabled={cartItems.length === 0}
-              >
-                Continue to checkout
-              </button>
             </form>
+
+            {cartItems.length > 0 && isFormValid() ? (
+              <div className="mt-4">
+                <h5>Complete Payment</h5>
+                <RazorpayButton
+                  orderAmount={total.toFixed(2)}
+                  orderDetails={{
+                    userAddress: `${data.firstName} ${data.lastName}, ${data.address}, ${data.city}, ${data.state}, ${data.zip}`,
+                    phoneNumber: data.phoneNumber,
+                    email: data.email,
+                    orderedItems: cartItems.map((item) => ({
+                      foodId: item.id.toString(),
+                      quantity: quantities[item.id],
+                      price: item.price * quantities[item.id],
+                      category: item.category,
+                      imageUrl: item.imageUrl,
+                      description: item.description,
+                      name: item.name,
+                    })),
+                    amount: total.toFixed(2),
+                    orderStatus: "Preparing",
+                  }}
+                  onPaymentSuccess={handlePaymentSuccess}
+                />
+              </div>
+            ) : (
+              <div className="mt-4 text-muted">
+                Please fill out the billing address to proceed with payment.
+              </div>
+            )}
           </div>
         </div>
       </main>

@@ -1,30 +1,35 @@
-import React, { useEffect, useState, useCallback, useContext } from "react";
+import React, { useEffect, useState } from "react";
+import { useContext } from "react";
 import { StoreContext } from "../../context/StoreContext";
+import axios from "axios";
 import { assets } from "../../assets/assets";
 import "./MyOrders.css";
-import { fetchUserOrders } from "../../service/orderService";
+import { orderService } from "../../service/orderService";
 
 const MyOrders = () => {
   const { token } = useContext(StoreContext);
   const [data, setData] = useState([]);
 
-  // Wrap fetchOrders in useCallback to satisfy ESLint dependencies
-  const fetchOrders = useCallback(async () => {
-    if (!token) return;
-    const response = await fetchUserOrders(token);
+  const fetchOrders = async () => {
+    const response = await orderService.fetchUserOrders(token);
     setData(response);
+  };
+
+  useEffect(() => {
+    if (token) {
+      fetchOrders();
+    }
   }, [token]);
 
-  // Fetch orders once on mount or when token changes
+  // Auto-refresh every 30 seconds
   useEffect(() => {
-    fetchOrders();
-  }, [fetchOrders]);
-
-  // Auto-refresh orders every 30 seconds
-  useEffect(() => {
-    const interval = setInterval(fetchOrders, 30000); // 30s
+    const interval = setInterval(() => {
+      if (token) {
+        fetchOrders();
+      }
+    }, 30000);
     return () => clearInterval(interval);
-  }, [fetchOrders]);
+  }, [token]);
 
   return (
     <div className="container">
@@ -32,29 +37,42 @@ const MyOrders = () => {
         <div className="col-11 card">
           <table className="table table-responsive">
             <tbody>
-              {data.map((order, index) => (
-                <tr key={index}>
-                  <td>
-                    <img src={assets.delivery} alt="" height={48} width={48} />
-                  </td>
-                  <td>
-                    {order.orderedItems?.map((item, itemIndex) => (
-                      <span key={itemIndex}>
-                        {item.name} x {item.quantity}
-                        {itemIndex !== order.orderedItems.length - 1 ? ", " : ""}
-                      </span>
-                    ))}
-                  </td>
-                  <td>&#x20B9;{order.amount.toFixed(2)}</td>
-                  <td>Items: {order.orderedItems?.length || 0}</td>
-                  <td className="fw-bold text-capitalize">&#x25cf;{order.orderStatus}</td>
-                  <td>
-                    <button className="btn btn-sm btn-warning" onClick={fetchOrders}>
-                      <i className="bi bi-arrow-clockwise"></i>
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {data.map((order, index) => {
+                return (
+                  <tr key={index}>
+                    <td>
+                      <img
+                        src={assets.delivery}
+                        alt=""
+                        height={48}
+                        width={48}
+                      />
+                    </td>
+                    <td>
+                      {order.orderedItems && order.orderedItems.map((item, itemIndex) => {
+                        if (itemIndex === order.orderedItems.length - 1) {
+                          return <span key={itemIndex}>{item.name + " x " + item.quantity}</span>;
+                        } else {
+                          return <span key={itemIndex}>{item.name + " x " + item.quantity + ", "}</span>;
+                        }
+                      })}
+                    </td>
+                    <td>&#x20B9;{order.amount.toFixed(2)}</td>
+                    <td>Items: {order.orderedItems ? order.orderedItems.length : 0}</td>
+                    <td className="fw-bold text-capitalize">
+                      &#x25cf;{order.orderStatus}
+                    </td>
+                    <td>
+                      <button
+                        className="btn btn-sm btn-warning"
+                        onClick={fetchOrders}
+                      >
+                        <i className="bi bi-arrow-clockwise"></i>
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

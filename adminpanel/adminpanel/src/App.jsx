@@ -2,6 +2,7 @@ import React, { use, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import AddFood from './pages/AddFood/AddFood';
 import ListFood from './pages/ListFood/ListFood';
+import UpdateFood from './pages/UpdateFood/UpdateFood';
 import Orders from './pages/Orders/Orders';
 import Sidebar from './components/Sidebar/Sidebar';
 import Menubar from './components/Menubar/Menubar';
@@ -27,6 +28,7 @@ const App = () => {
                     <Routes>
                       <Route path='/add' element={<AddFood />} />
                       <Route path='/list' element={<ListFood />} />
+                      <Route path='/update/:id' element={<UpdateFood />} />
                       <Route path='/orders' element={<Orders />} />
                       <Route path='/' element={<ListFood />} />
                     </Routes>

@@ -10,6 +10,7 @@
 .cart-summary {
     background-color: #f8f9fa;
     border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .cart-item hr {
@@ -17,4 +18,27 @@
     height: 2px;
     background-color: #e2e2e2;
     border: none;
+}
+
+.delivery-info {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 5px;
+}
+
+.free-delivery {
+    color: #28a745 !important;
+    font-weight: 500;
+}
+
+.price-breakdown {
+    font-size: 0.9rem;
+}
+
+.total-section {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+    border: 1px solid #e9ecef;
 }

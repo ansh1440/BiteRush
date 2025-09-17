@@ -34,3 +34,21 @@ export const deleteFood = async (foodId) => {
         throw error;
     }
 }
+
+export const updateFood = async (foodId, foodData, image) => {
+    const formData = new FormData();
+    formData.append('food', JSON.stringify(foodData));
+    if (image) {
+        formData.append('file', image);
+    }
+
+    try {
+        const response = await axios.put(`${API_URL}/${foodId}`, formData, {
+            headers: { "Content-Type": "multipart/form-data"}
+        });
+        return response.data;
+    } catch (error) {
+        console.log('Error updating food', error);
+        throw error;
+    }
+}

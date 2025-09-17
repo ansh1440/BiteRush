@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchFoodDetails } from "../../service/foodService";
+import { getImageUrl } from "../../util/imageUtils";
 import { toast } from "react-toastify";
 import { StoreContext } from "../../context/StoreContext";
 
@@ -35,7 +36,7 @@ const FoodDetails = () => {
           <div className="col-md-6">
             <img
               className="card-img-top mb-5 mb-md-0"
-              src={data.imageUrl}
+              src={getImageUrl(data.imageUrl)}
               alt="..."
             />
           </div>

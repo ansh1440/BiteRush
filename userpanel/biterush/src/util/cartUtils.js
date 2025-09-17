@@ -4,7 +4,7 @@ export const calculateCartTotals = (cartItems, quantities) => {
         0
     );
     
-   
+    // Delivery fee logic (like Swiggy)
     let deliveryFee = 0;
     if (subtotal > 0) {
         if (subtotal < 199) {

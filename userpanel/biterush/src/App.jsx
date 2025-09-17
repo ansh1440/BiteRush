@@ -10,9 +10,11 @@ import Cart from "./pages/Cart/Cart";
 import PlaceOrder from "./pages/PlaceOrder/PlaceOrder";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
+import OtpVerification from "./components/OtpVerification/OtpVerification";
 import { ToastContainer } from "react-toastify";
 import MyOrders from "./pages/MyOrders/MyOrders";
 import { StoreContext } from "./context/StoreContext";
+import "./utils/axiosConfig";
 
 const App = () => {
   const { token } = useContext(StoreContext);
@@ -29,6 +31,7 @@ const App = () => {
         <Route path="/order" element={token ? <PlaceOrder /> : <Login />} />
         <Route path="/login" element={token ? <Home /> : <Login />} />
         <Route path="/register" element={token ? <Home /> : <Register />} />
+        <Route path="/verify-otp" element={token ? <Home /> : <OtpVerification />} />
         <Route path="/myorders" element={token ? <MyOrders /> : <Login />} />
       </Routes>
       <Footer />

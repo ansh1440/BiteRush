@@ -1,11 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import "./ListFood.css";
 import { deleteFood, getFoodList } from "../../services/foodService";
 
 const ListFood = () => {
   const [list, setList] = useState([]);
+  const navigate = useNavigate();
   const fetchList = async () => {
     try {
       const data = await getFoodList();
@@ -50,15 +52,21 @@ const ListFood = () => {
               return (
                 <tr key={index}>
                   <td>
-                    <img src={item.imageUrl} alt="" height={48} width={48} />
+                    <img src={`http://localhost:8080${item.imageUrl}`} alt="" height={48} width={48} />
                   </td>
                   <td>{item.name}</td>
                   <td>{item.category}</td>
                   <td>&#8377;{item.price}.00</td>
-                  <td className="text-danger">
+                  <td>
                     <i
-                      class="bi bi-trash-fill fs-4"
+                      className="bi bi-pencil-square fs-4 text-primary me-3"
+                      onClick={() => navigate(`/update/${item.id}`)}
+                      style={{cursor: 'pointer'}}
+                    ></i>
+                    <i
+                      className="bi bi-trash-fill fs-4 text-danger"
                       onClick={() => removeFood(item.id)}
+                      style={{cursor: 'pointer'}}
                     ></i>
                   </td>
                 </tr>
