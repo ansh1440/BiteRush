@@ -1,78 +1,157 @@
-# BiteRush - Food Delivery Application
+# 🍕 BiteRush - Food Delivery Platform
 
-A complete food delivery application built with React.js frontend and Spring Boot backend.
+> A modern, full-stack food delivery application featuring React.js frontend and Spring Boot backend with comprehensive admin and user management systems.
 
-## Project Structure
+## 📋 Table of Contents
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Documentation](#api-documentation)
+- [Contributing](#contributing)
+- [Author](#author)
 
-- **adminpanel/adminpanel/** - Admin panel for managing food items and orders
-- **userpanel/biterush/** - User interface for ordering food
-- **Backend** - Spring Boot API (separate repository)
+## ✨ Features
 
-## Features
+### 🔧 Admin Panel
+- **Food Management**: Create, read, update, and delete food items
+- **Order Management**: Track and manage customer orders
+- **Secure Authentication**: Admin login with JWT tokens
+- **File Upload**: Image management for food items
 
-### Admin Panel
-- Add, update, delete food items
-- Manage orders
-- Admin authentication
+### 👤 User Panel
+- **Food Catalog**: Browse and search food items by categories
+- **Shopping Cart**: Add/remove items with quantity management
+- **Order Placement**: Seamless checkout process
+- **OTP Authentication**: Secure user registration and login
+- **Payment Integration**: Razorpay payment gateway
+- **Order Tracking**: Real-time order status updates
 
-### User Panel
-- Browse food items
-- Add items to cart
-- Place orders
-- User authentication with OTP
-- Razorpay payment integration
-
-## Technologies Used
+## 🛠️ Tech Stack
 
 ### Frontend
-- React.js
-- CSS3
-- Axios for API calls
-- Context API for state management
+- **React.js** - UI library
+- **CSS3** - Styling
+- **Axios** - HTTP client
+- **Context API** - State management
+- **React Router** - Navigation
 
 ### Backend
-- Spring Boot
-- Spring Security
-- JWT Authentication
-- MySQL Database
-- File Upload handling
+- **Spring Boot** - Java framework
+- **Spring Security** - Authentication & authorization
+- **JWT** - Token-based authentication
+- **MySQL** - Database
+- **Maven** - Dependency management
+- **Multipart File Upload** - Image handling
 
-## Getting Started
+## 📁 Project Structure
 
-### Prerequisites
-- Node.js
-- Java 11+
-- MySQL
+```
+BiteRush/
+├── adminpanel/adminpanel/     # Admin dashboard
+│   ├── src/
+│   ├── public/
+│   └── package.json
+├── userpanel/biterush/        # Customer interface
+│   ├── src/
+│   ├── public/
+│   └── package.json
+├── backend/                   # Spring Boot API
+│   ├── src/main/java/
+│   ├── src/main/resources/
+│   └── pom.xml
+└── README.md
+```
 
-### Installation
+## 📋 Prerequisites
 
-1. Clone the repository
+Ensure you have the following installed:
+
+- **Node.js** (v14.0 or higher)
+- **npm** or **yarn**
+- **Java** (JDK 11 or higher)
+- **Maven** (v3.6 or higher)
+- **MySQL** (v8.0 or higher)
+
+## 🚀 Installation
+
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/ansh1440/BiteRush.git
+cd BiteRush
 ```
 
-2. Install frontend dependencies
+### 2. Database Setup
+```sql
+CREATE DATABASE biterush;
+USE biterush;
+```
+
+### 3. Backend Setup
 ```bash
-# For Admin Panel
+cd backend
+# Configure database in src/main/resources/application.properties
+mvn clean install
+mvn spring-boot:run
+```
+
+### 4. Frontend Setup
+
+**Admin Panel:**
+```bash
 cd adminpanel/adminpanel
 npm install
+npm start
+```
 
-# For User Panel
+**User Panel:**
+```bash
 cd userpanel/biterush
 npm install
-```
-
-3. Start the applications
-```bash
-# Admin Panel
-npm start
-
-# User Panel
 npm start
 ```
 
-## Author
+## 🎯 Usage
+
+- **Admin Panel**: http://localhost:3000
+- **User Panel**: http://localhost:3001
+- **Backend API**: http://localhost:8080
+
+## 📚 API Documentation
+
+### Authentication Endpoints
+- `POST /api/auth/login` - User login
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/verify-otp` - OTP verification
+
+### Food Management
+- `GET /api/foods` - Get all food items
+- `POST /api/foods` - Create food item (Admin)
+- `PUT /api/foods/{id}` - Update food item (Admin)
+- `DELETE /api/foods/{id}` - Delete food item (Admin)
+
+### Order Management
+- `POST /api/orders` - Place order
+- `GET /api/orders/user/{userId}` - Get user orders
+- `GET /api/orders` - Get all orders (Admin)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 👨‍💻 Author
 
 **Ansh More**
 - GitHub: [@ansh1440](https://github.com/ansh1440)
+- LinkedIn: [Connect with me](https://linkedin.com/in/ansh-more)
+
+---
+
+⭐ **Star this repository if you found it helpful!**
 
