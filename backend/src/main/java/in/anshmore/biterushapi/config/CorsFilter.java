@@ -1,0 +1,1 @@
+// CorsFilter removed to avoid conflicts with SecurityConfig CORS
