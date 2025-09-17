@@ -149,7 +149,7 @@ npm start
 
 **Ansh More**
 - GitHub: [@ansh1440](https://github.com/ansh1440)
-- LinkedIn: [Connect with me](https://linkedin.com/in/ansh-more)
+- LinkedIn: [Connect with me](https://www.linkedin.com/in/ansh-more-1316b522b/)
 
 ---
 
