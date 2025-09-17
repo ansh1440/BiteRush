@@ -1,26 +1,36 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { fetchAllOrders, updateOrderStatus } from "../../services/orderService";
+import { toast } from "react-toastify";
 import { assets } from "../../assets/assets";
 
 const Orders = () => {
   const [data, setData] = useState([]);
 
   const fetchOrders = async () => {
-    const response = await axios.get("http://localhost:8080/api/orders/all");
-    setData(response.data);
+    try {
+      const response = await fetchAllOrders();
+      console.log('Orders response:', response);
+      setData(response || []);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      toast.error("Unable to display the orders. Please try again.");
+      setData([]);
+    }
   };
 
   const updateStatus = async (event, orderId) => {
-    const response = await axios.patch(
-      `http://localhost:8080/api/orders/status/${orderId}?status=${event.target.value}`
-    );
-    if (response.status === 200) {
-      await fetchOrders();
-    }
+    const success = await updateOrderStatus(orderId, event.target.value);
+    if (success) await fetchOrders();
   };
 
   useEffect(() => {
     fetchOrders();
+  }, []);
+
+  // Auto-refresh every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(fetchOrders, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -29,31 +39,32 @@ const Orders = () => {
         <div className="col-11 card">
           <table className="table table-responsive">
             <tbody>
-              {data.map((order, index) => {
+              {data && data.length > 0 ? data.map((order, index) => {
                 return (
                   <tr key={index}>
                     <td>
-                      <img src={assets.parcel} alt="" height={48} width={48} />
+                      <img src={assets.biterush} alt="Order" height={32} width={32}/>
                     </td>
                     <td>
                       <div>
-                        {order.orderedItems.map((item, index) => {
-                          if (index === order.orderedItems.length - 1) {
-                            return item.name + " x " + item.quantity;
+                        {order.orderedItems && order.orderedItems.map((item, itemIndex) => {
+                          if (itemIndex === order.orderedItems.length - 1) {
+                            return <span key={itemIndex}>{item.name + " x " + item.quantity}</span>;
                           } else {
-                            return item.name + " x " + item.quantity + ", ";
+                            return <span key={itemIndex}>{item.name + " x " + item.quantity + ", "}</span>;
                           }
                         })}
                       </div>
-                      <div>{order.userAddress}</div>
+                      <div>{order.userAddress === '123 Main St' ? '502 5th Floor, Sunshine Plaza, Kailash Lassi Lane, near Dadar Railway Station, Dadar East, Dadar, Mumbai, Maharashtra 400014' : order.userAddress}</div>
                     </td>
-                    <td>&#x20B9;{order.amount.toFixed(2)}</td>
-                    <td>Items: {order.orderedItems.length}</td>
+                    <td>&#x20B9;{order.amount ? order.amount.toFixed(2) : '0.00'}</td>
+                    <td>Items: {order.orderedItems ? order.orderedItems.length : 0}</td>
                     <td>
                       <select
-                        className="form-control"
+                        className="form-select"
+                        style={{minWidth: '150px', fontSize: '14px'}}
                         onChange={(event) => updateStatus(event, order.id)}
-                        value={order.orderStatus}
+                        value={order.orderStatus || 'Food Preparing'}
                       >
                         <option value="Food Preparing">Food Preparing</option>
                         <option value="Out for delivery">
@@ -64,7 +75,16 @@ const Orders = () => {
                     </td>
                   </tr>
                 );
-              })}
+              }) : (
+                <tr>
+                  <td colSpan="5" className="text-center py-4">
+                    <div className="text-muted">
+                      <i className="bi bi-inbox" style={{fontSize: '2rem'}}></i>
+                      <p className="mt-2">No orders found</p>
+                    </div>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

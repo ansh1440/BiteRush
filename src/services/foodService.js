@@ -1,6 +1,11 @@
 import axios from "axios";
 
-const API_URL = 'http://localhost:8080/api/foods';
+const API_URL = `${process.env.REACT_APP_API_URL || 'http://localhost:8080/api'}/foods`;
+
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return token ? { Authorization: `Bearer ${token}` } : {};
+};
 
 export const addFood = async (foodData, image) => {
     const formData = new FormData();
@@ -8,7 +13,12 @@ export const addFood = async (foodData, image) => {
     formData.append('file', image); 
 
     try {
-        await axios.post(API_URL, formData, {headers: { "Content-Type": "multipart/form-data"}});
+        await axios.post(API_URL, formData, {
+            headers: { 
+                "Content-Type": "multipart/form-data",
+                ...getAuthHeaders()
+            }
+        });
     } catch (error) {
         console.log('Error', error);
         throw error;
@@ -17,7 +27,7 @@ export const addFood = async (foodData, image) => {
 
 export const getFoodList = async () => {
     try {
-        const response = await axios.get(API_URL);
+        const response = await axios.get(API_URL, { headers: getAuthHeaders() });
         return response.data;
     } catch (error) {
         console.log('Error fetching food list', error);
@@ -27,10 +37,31 @@ export const getFoodList = async () => {
 
 export const deleteFood = async (foodId) => {
     try {
-        const response = await axios.delete(API_URL+"/"+foodId);
+        const response = await axios.delete(`${API_URL}/${foodId}`, { headers: getAuthHeaders() });
         return response.status === 204;
     } catch (error) {
         console.log('Error while deleting the food.', error);
+        throw error;
+    }
+}
+
+export const updateFood = async (foodId, foodData, image) => {
+    const formData = new FormData();
+    formData.append('food', JSON.stringify(foodData));
+    if (image) {
+        formData.append('file', image);
+    }
+
+    try {
+        const response = await axios.put(`${API_URL}/${foodId}`, formData, {
+            headers: { 
+                "Content-Type": "multipart/form-data",
+                ...getAuthHeaders()
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.log('Error updating food', error);
         throw error;
     }
 }

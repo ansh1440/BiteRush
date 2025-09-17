@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import {assets} from '../../assets/assets';
-import axios from 'axios';
+
 import { addFood } from '../../services/foodService';
 import { toast } from 'react-toastify';
 
 const AddFood = () => {
-    const [image, setImage] = useState(false);
+    const [image, setImage] = useState(null);
     const [data, setData] = useState({
         name:'',
         description: '',
@@ -29,7 +29,7 @@ const AddFood = () => {
             await addFood(data, image);
             toast.success('Food added successfully.');
             setData({name: '', description: '', category: 'Biryani', price: ''});
-            setImage(null);
+            setImage(false);
         } catch (error) {
             toast.error('Error adding food.');
         }
@@ -45,7 +45,7 @@ const AddFood = () => {
             <label htmlFor="image" className="form-label">
                 <img src={image ? URL.createObjectURL(image): assets.upload} alt="" width={98} />
             </label>
-            <input type="file" className="form-control" id="image" hidden onChange={(e) => setImage(e.target.files[0])} />
+            <input type="file" className="form-control" id="image" accept="image/*" hidden onChange={(e) => setImage(e.target.files[0])} />
           </div>
           <div className="mb-3">
             <label htmlFor="name" className="form-label">Name</label>
