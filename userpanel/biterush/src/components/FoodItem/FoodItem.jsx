@@ -41,30 +41,12 @@ const FoodItem = ({ name, description, id, imageUrl, price }) => {
           <Link className="btn btn-success btn-sm" to={`/food/${id}`}>
             View Food
           </Link>
-          {quantities && quantities[id] > 0 ? (
-            <div className="d-flex align-items-center gap-2">
-              <button
-                className="btn btn-danger btn-sm"
-                onClick={() => decreaseQty(id)}
-              >
-                <i className="bi bi-dash-circle"></i>
-              </button>
-              <span className="fw-bold">{quantities[id]}</span>
-              <button
-                className="btn btn-success btn-sm"
-                onClick={() => increaseQty(id)}
-              >
-                <i className="bi bi-plus-circle"></i>
-              </button>
-            </div>
-          ) : (
-            <button
-              className="btn btn-primary btn-sm"
-              onClick={() => increaseQty(id)}
-            >
-              <i className="bi bi-plus-circle"></i>
-            </button>
-          )}
+          <button
+            className="btn btn-primary btn-sm"
+            onClick={() => increaseQty(id)}
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>

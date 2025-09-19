@@ -73,6 +73,7 @@ const Menubar = () => {
                 Contact us
               </Link>
             </li>
+
           </ul>
           <div className="d-flex align-items-center gap-4">
             <Link to={`/cart`}>

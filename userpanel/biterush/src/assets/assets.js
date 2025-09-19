@@ -11,12 +11,16 @@ import salad from './salad.png';
 
 import profile from './profile.png';
 import delivery from './delivery.png';
+import momos from './momos.png';
+import tandori from './tandori.png';
 
 export const assets = {
     logo,
     cart,
     profile,
-    delivery
+    delivery,
+    momos,
+    tandori
 }
 
 export const categories = [

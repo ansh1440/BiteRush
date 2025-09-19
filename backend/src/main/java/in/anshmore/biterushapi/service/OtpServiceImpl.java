@@ -1,9 +1,11 @@
 package in.anshmore.biterushapi.service;
 
 import in.anshmore.biterushapi.entity.OtpEntity;
+import in.anshmore.biterushapi.entity.UserEntity;
 import in.anshmore.biterushapi.repository.OtpRepository;
 import in.anshmore.biterushapi.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -16,6 +18,7 @@ import java.util.Random;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class OtpServiceImpl implements OtpService {
     
     private final OtpRepository otpRepository;
@@ -46,7 +49,7 @@ public class OtpServiceImpl implements OtpService {
             sendEmailAsync(email, otp, userName);
         } catch (Exception e) {
             // Log error but don't fail the OTP generation
-            System.err.println("Email sending failed, but OTP saved: " + e.getMessage());
+            log.warn("Email sending failed, but OTP saved: {}", e.getMessage());
         }
     }
     
@@ -64,20 +67,20 @@ public class OtpServiceImpl implements OtpService {
             helper.setText(createHtmlContent(otp, displayName), true);
             
             mailSender.send(message);
-            System.out.println("Email sent successfully to: " + email);
+            log.info("Email sent successfully to: {}", email);
         } catch (Exception e) {
-            System.err.println("Failed to send email to " + email + ": " + e.getMessage());
+            log.error("Failed to send email to {}: {}", email, e.getMessage());
         }
     }
     
     private String getUsernameFromEmail(String email) {
         return userRepository.findByEmail(email)
                 .map(user -> {
-                    System.out.println("Found user: " + user.getName() + " for email: " + email);
+                    log.debug("Found user: {} for email: {}", user.getName(), email);
                     return user.getName();
                 })
                 .orElseGet(() -> {
-                    System.out.println("User not found for email: " + email);
+                    log.debug("User not found for email: {}", email);
                     return "User";
                 });
     }
@@ -125,13 +128,34 @@ public class OtpServiceImpl implements OtpService {
     @Override
     @Transactional
     public boolean verifyOtp(String email, String otp) {
+        log.info("Starting OTP verification for email: {}", email);
+        
         return otpRepository.findByEmailAndOtp(email, otp)
                 .map(otpEntity -> {
+                    log.debug("OTP found in database for email: {}", email);
                     if (otpEntity.getExpiresAt().isAfter(LocalDateTime.now())) {
+                        log.debug("OTP is valid (not expired) for email: {}", email);
+                        
+                        // Update user verification status
+                        var userOptional = userRepository.findByEmail(email);
+                        if (userOptional.isPresent()) {
+                            UserEntity user = userOptional.get();
+                            log.debug("Updating email verification status for user: {}", user.getEmail());
+                            user.setEmailVerified(true);
+                            userRepository.save(user);
+                            log.info("Email verification completed for user: {}", user.getEmail());
+                        } else {
+                            log.error("User not found for email: {}", email);
+                        }
+                        
                         otpRepository.deleteByEmail(email);
+                        log.debug("OTP deleted from database for email: {}", email);
+                        log.info("OTP verification successful for email: {}", email);
                         return true;
+                    } else {
+                        log.warn("OTP expired for email: {}", email);
+                        return false;
                     }
-                    return false;
                 }).orElse(false);
     }
 }

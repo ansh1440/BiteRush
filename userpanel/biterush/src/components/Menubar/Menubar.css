@@ -6,7 +6,8 @@
     padding: 1rem 0;
     transition: all 0.3s ease;
     z-index: 1050 !important;
-    position: relative;
+    position: sticky;
+    top: 0;
 }
 
 .navbar-brand {
@@ -65,7 +66,7 @@
     background: #ff6b35 !important;
     color: white !important;
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
 }
 
 .btn-outline-success {
@@ -82,7 +83,17 @@
     background: #f7931e !important;
     color: white !important;
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(247, 147, 30, 0.3);
+    box-shadow: 0 6px 20px rgba(247, 147, 30, 0.4);
+}
+
+/* Enhanced button effects */
+.btn:hover {
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+}
+
+.btn:active {
+    transform: translateY(0);
 }
 
 .position-relative img {
@@ -96,7 +107,6 @@
 .badge {
     background: linear-gradient(135deg, #ff6b35, #f7931e) !important;
     box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
-    animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
@@ -111,6 +121,22 @@
 
 .dropdown-toggle:hover {
     transform: scale(1.05);
+}
+
+.profile-avatar {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    border: 2px solid #ff6b35;
+    object-fit: cover;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
+}
+
+.profile-avatar:hover {
+    border-color: #f7931e;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+    transform: scale(1.1);
 }
 
 .dropdown-menu {

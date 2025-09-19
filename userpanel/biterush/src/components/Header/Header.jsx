@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
+import { assets } from '../../assets/assets';
 
 const Header = () => {
   return (
@@ -23,7 +24,7 @@ const Header = () => {
             </div>
           </div>
           <div className="carousel-item">
-            <div className="carousel-slide slide-2">
+            <div className="carousel-slide slide-2" style={{backgroundImage: `url(${assets.momos})`}}>
               <div className="carousel-content">
                 <h1 className="display-4 fw-bold text-white">Fast Delivery</h1>
                 <p className="fs-5 text-white mb-4">Get your food delivered in 30 minutes</p>
@@ -32,7 +33,7 @@ const Header = () => {
             </div>
           </div>
           <div className="carousel-item">
-            <div className="carousel-slide slide-3">
+            <div className="carousel-slide slide-3" style={{backgroundImage: `url(${assets.tandori})`}}>
               <div className="carousel-content">
                 <h1 className="display-4 fw-bold text-white">Fresh & Quality</h1>
                 <p className="fs-5 text-white mb-4">Made with the finest ingredients</p>

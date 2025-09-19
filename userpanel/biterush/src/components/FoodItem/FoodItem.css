@@ -6,11 +6,21 @@
 }
 
 .food-card:hover {
-    transform: translateY(-3px);
     box-shadow: 0 4px 15px rgba(255, 107, 53, 0.15);
 }
 
 .food-card .price {
     color: #ff6b35;
     font-weight: 600;
+}
+
+.food-card .fw-bold {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 4px 8px;
+    min-width: 30px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #495057;
 }

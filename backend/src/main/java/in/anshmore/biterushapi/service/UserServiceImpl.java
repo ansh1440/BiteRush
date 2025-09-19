@@ -24,6 +24,8 @@ public class UserServiceImpl implements UserService{
     public UserResponse registerUser(UserRequest request) {
         try {
             UserEntity newUser = convertToEntity(request);
+            // Set emailVerified to true by default for now
+            newUser.setEmailVerified(true);
             newUser = userRepository.save(newUser);
             return convertToResponse(newUser);
         } catch (DataIntegrityViolationException e) {

@@ -21,8 +21,21 @@ const Register = () => {
   const onSubmitHandler = async (event) => {
     event.preventDefault();
     
-    if (!data.email || !data.name || !data.password) {
-      toast.error("Please fill all fields first");
+    // Validation
+    if (!data.name || !data.email || !data.password) {
+      toast.error("Please fill all fields");
+      return;
+    }
+    if (data.name.length < 2) {
+      toast.error("Name must be at least 2 characters");
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(data.email)) {
+      toast.error("Please enter a valid email");
+      return;
+    }
+    if (data.password.length < 6) {
+      toast.error("Password must be at least 6 characters");
       return;
     }
     

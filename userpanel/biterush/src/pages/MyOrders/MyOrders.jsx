@@ -32,7 +32,7 @@ const MyOrders = () => {
   }, [token]);
 
   return (
-    <div className="container">
+    <div className="container" style={{minHeight: '70vh'}}>
       <div className="py-5 row justify-content-center">
         <div className="col-11 card">
           <table className="table table-responsive">

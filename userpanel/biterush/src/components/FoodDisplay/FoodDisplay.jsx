@@ -4,7 +4,7 @@ import FoodItem from '../FoodItem/FoodItem';
 
 const FoodDisplay = ({category, searchText}) => {
 
-    const {foodList} = useContext(StoreContext);
+    const {foodList, loading} = useContext(StoreContext);
     const filteredFoods = foodList.filter(food => (
         (category === 'All' || food.category === category) &&
         food.name.toLowerCase().includes(searchText.toLowerCase())
@@ -12,7 +12,12 @@ const FoodDisplay = ({category, searchText}) => {
   return (
     <div className="container">
         <div className="row">
-            {filteredFoods.length > 0 ? (
+            {loading ? (
+                <div className="text-center mt-5">
+                    <div className="loading-spinner"></div>
+                    <p className="mt-3">Loading delicious food...</p>
+                </div>
+            ) : filteredFoods.length > 0 ? (
                 filteredFoods.map((food, index) => (
                     <FoodItem key={index} 
                         name={food.name} 

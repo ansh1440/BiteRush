@@ -70,7 +70,7 @@ const UpdateFood = () => {
                                                 currentFood?.imageUrl ? `http://localhost:8080${currentFood.imageUrl}` : 
                                                 "/upload_area.png"
                                             } 
-                                            alt="Food Image" 
+                                            alt="Food" 
                                             width={98}
                                             style={{borderRadius: '8px', border: '2px dashed #ccc', padding: '10px'}}
                                         />

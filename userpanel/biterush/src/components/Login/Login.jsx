@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 const Login = () => {
   const { setToken, loadCartData } = useContext(StoreContext);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -21,6 +22,22 @@ const Login = () => {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
+    
+    // Validation
+    if (!data.email || !data.password) {
+      toast.error("Please fill all fields");
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(data.email)) {
+      toast.error("Please enter a valid email");
+      return;
+    }
+    if (data.password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+    
+    setLoading(true);
     try {
       const response = await login(data);
       if (response.status === 200) {
@@ -41,7 +58,13 @@ const Login = () => {
       } else {
         toast.error("Unable to login. Please try again");
       }
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const resetForm = () => {
+    setData({ email: "", password: "" });
   };
   return (
     <div className="login-container">
@@ -82,12 +105,19 @@ const Login = () => {
                   <button
                     className="btn btn-outline-primary btn-login text-uppercase"
                     type="submit"
+                    disabled={loading}
                   >
-                    Sign in
+                    {loading ? (
+                      <>
+                        <div className="loading-spinner" style={{width: '20px', height: '20px', marginRight: '10px', display: 'inline-block'}}></div>
+                        Please wait
+                      </>
+                    ) : 'Sign in'}
                   </button>
                   <button
                     className="btn btn-outline-danger btn-login text-uppercase mt-2"
-                    type="reset"
+                    type="button"
+                    onClick={resetForm}
                   >
                     Reset
                   </button>

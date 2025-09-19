@@ -14,7 +14,6 @@
 }
 
 .explore-menu-list-item:hover {
-    transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(255, 107, 53, 0.2);
 }
 

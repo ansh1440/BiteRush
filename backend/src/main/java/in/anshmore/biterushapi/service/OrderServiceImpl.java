@@ -5,6 +5,7 @@ import in.anshmore.biterushapi.io.OrderRequest;
 import in.anshmore.biterushapi.io.OrderResponse;
 import in.anshmore.biterushapi.repository.CartRespository;
 import in.anshmore.biterushapi.repository.OrderRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class OrderServiceImpl implements OrderService{
 
     @Autowired
@@ -46,7 +48,7 @@ public class OrderServiceImpl implements OrderService{
                 try {
                     cartRespository.deleteByUserId(newOrder.getUserId());
                 } catch (Exception e) {
-                    System.out.println("Cart clearing failed: " + e.getMessage());
+                    log.warn("Cart clearing failed: {}", e.getMessage());
                 }
             }
 

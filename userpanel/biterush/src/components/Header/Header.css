@@ -16,14 +16,12 @@
 }
 
 .slide-2 {
-    background-image: url("https://cdn.pixabay.com/photo/2016/12/26/17/28/spaghetti-1932466_1280.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
 
 .slide-3 {
-    background-image: url("https://images.unsplash.com/photo-1585937421612-70a008356fbe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1936&q=80");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

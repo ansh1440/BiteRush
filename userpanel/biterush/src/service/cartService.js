@@ -38,6 +38,18 @@ export const getCartData = async (token) => {
     }
 }
 
+export const deleteFromCart = async (foodId, token) => {
+    try {
+        await axios.post(
+            API_URL+"/delete",
+            { foodId },
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+    } catch (error) {
+        console.error('Error while deleting item from cart', error);
+    }
+}
+
 export const clearCartItems = async (token, setQuantities) => {
     try {
         await axios.delete(API_URL+"/clear", {
