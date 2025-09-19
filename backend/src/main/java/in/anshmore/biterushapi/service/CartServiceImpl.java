@@ -1,8 +1,8 @@
 package in.anshmore.biterushapi.service;
 
 import in.anshmore.biterushapi.entity.CartEntity;
-import in.anshmore.biterushapi.io.CartRequest;
-import in.anshmore.biterushapi.io.CartResponse;
+import in.anshmore.biterushapi.dto.CartRequest;
+import in.anshmore.biterushapi.dto.CartResponse;
 import in.anshmore.biterushapi.repository.CartRespository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

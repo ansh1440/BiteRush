@@ -1,4 +1,4 @@
-package in.anshmore.biterushapi.io;
+package in.anshmore.biterushapi.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CartRequest {
-    private String foodId;
+public class OtpRequest {
+    private String email;
+    private String otp;
 }

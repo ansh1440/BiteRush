@@ -1,8 +1,8 @@
 package in.anshmore.biterushapi.service;
 
 import in.anshmore.biterushapi.entity.OrderEntity;
-import in.anshmore.biterushapi.io.OrderRequest;
-import in.anshmore.biterushapi.io.OrderResponse;
+import in.anshmore.biterushapi.dto.OrderRequest;
+import in.anshmore.biterushapi.dto.OrderResponse;
 import in.anshmore.biterushapi.repository.CartRespository;
 import in.anshmore.biterushapi.repository.OrderRepository;
 import lombok.extern.slf4j.Slf4j;

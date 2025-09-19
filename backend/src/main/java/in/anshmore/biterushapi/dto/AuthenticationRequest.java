@@ -1,4 +1,4 @@
-package in.anshmore.biterushapi.io;
+package in.anshmore.biterushapi.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserResponse {
-    private Long id;
-    private String name;
+public class AuthenticationRequest {
+
     private String email;
+    private String password;
 }

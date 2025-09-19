@@ -1,4 +1,4 @@
-package in.anshmore.biterushapi.io;
+package in.anshmore.biterushapi.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AuthenticationRequest {
+public class UserRequest {
 
+    private String name;
     private String email;
     private String password;
 }

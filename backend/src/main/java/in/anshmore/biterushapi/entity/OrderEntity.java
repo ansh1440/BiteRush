@@ -1,6 +1,6 @@
 package in.anshmore.biterushapi.entity;
 
-import in.anshmore.biterushapi.io.OrderItem;
+import in.anshmore.biterushapi.dto.OrderItem;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

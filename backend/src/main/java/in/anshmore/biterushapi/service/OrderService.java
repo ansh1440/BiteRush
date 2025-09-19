@@ -1,7 +1,7 @@
 package in.anshmore.biterushapi.service;
 
-import in.anshmore.biterushapi.io.OrderRequest;
-import in.anshmore.biterushapi.io.OrderResponse;
+import in.anshmore.biterushapi.dto.OrderRequest;
+import in.anshmore.biterushapi.dto.OrderResponse;
 
 import java.util.List;
 

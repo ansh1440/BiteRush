@@ -1,8 +1,8 @@
 package in.anshmore.biterushapi.controller;
 
-import in.anshmore.biterushapi.io.AuthenticationRequest;
-import in.anshmore.biterushapi.io.AuthenticationResponse;
-import in.anshmore.biterushapi.io.OtpRequest;
+import in.anshmore.biterushapi.dto.AuthenticationRequest;
+import in.anshmore.biterushapi.dto.AuthenticationResponse;
+import in.anshmore.biterushapi.dto.OtpRequest;
 import in.anshmore.biterushapi.service.AppUserDetailsService;
 import in.anshmore.biterushapi.service.OtpService;
 import in.anshmore.biterushapi.service.UserService;

@@ -1,8 +1,8 @@
 package in.anshmore.biterushapi.service;
 
 import in.anshmore.biterushapi.entity.FoodEntity;
-import in.anshmore.biterushapi.io.FoodRequest;
-import in.anshmore.biterushapi.io.FoodResponse;
+import in.anshmore.biterushapi.dto.FoodRequest;
+import in.anshmore.biterushapi.dto.FoodResponse;
 import in.anshmore.biterushapi.repository.FoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

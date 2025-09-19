@@ -1,7 +1,7 @@
 package in.anshmore.biterushapi.controller;
 
-import in.anshmore.biterushapi.io.OrderRequest;
-import in.anshmore.biterushapi.io.OrderResponse;
+import in.anshmore.biterushapi.dto.OrderRequest;
+import in.anshmore.biterushapi.dto.OrderResponse;
 import in.anshmore.biterushapi.service.OrderServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,8 +1,8 @@
 package in.anshmore.biterushapi.controller;
 
-import in.anshmore.biterushapi.io.OtpRequest;
-import in.anshmore.biterushapi.io.UserRequest;
-import in.anshmore.biterushapi.io.UserResponse;
+import in.anshmore.biterushapi.dto.OtpRequest;
+import in.anshmore.biterushapi.dto.UserRequest;
+import in.anshmore.biterushapi.dto.UserResponse;
 import in.anshmore.biterushapi.service.OtpService;
 import in.anshmore.biterushapi.service.UserService;
 import lombok.AllArgsConstructor;

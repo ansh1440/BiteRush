@@ -2,8 +2,8 @@ package in.anshmore.biterushapi.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import in.anshmore.biterushapi.io.FoodRequest;
-import in.anshmore.biterushapi.io.FoodResponse;
+import in.anshmore.biterushapi.dto.FoodRequest;
+import in.anshmore.biterushapi.dto.FoodResponse;
 import in.anshmore.biterushapi.service.FoodService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

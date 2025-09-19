@@ -1,4 +1,4 @@
-package in.anshmore.biterushapi.io;
+package in.anshmore.biterushapi.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

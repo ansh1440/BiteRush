@@ -1,8 +1,8 @@
 package in.anshmore.biterushapi.service;
 
 import in.anshmore.biterushapi.entity.UserEntity;
-import in.anshmore.biterushapi.io.UserRequest;
-import in.anshmore.biterushapi.io.UserResponse;
+import in.anshmore.biterushapi.dto.UserRequest;
+import in.anshmore.biterushapi.dto.UserResponse;
 import in.anshmore.biterushapi.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;

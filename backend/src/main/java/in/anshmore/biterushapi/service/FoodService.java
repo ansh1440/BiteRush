@@ -1,7 +1,7 @@
 package in.anshmore.biterushapi.service;
 
-import in.anshmore.biterushapi.io.FoodRequest;
-import in.anshmore.biterushapi.io.FoodResponse;
+import in.anshmore.biterushapi.dto.FoodRequest;
+import in.anshmore.biterushapi.dto.FoodResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
