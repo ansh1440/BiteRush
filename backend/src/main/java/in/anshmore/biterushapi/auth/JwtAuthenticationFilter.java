@@ -1,4 +1,4 @@
-package in.anshmore.biterushapi.filters;
+package in.anshmore.biterushapi.auth;
 
 import in.anshmore.biterushapi.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
