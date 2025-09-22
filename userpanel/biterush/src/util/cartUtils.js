@@ -6,13 +6,18 @@ export const calculateCartTotals = (cartItems, quantities) => {
     
     // Delivery fee logic (like Swiggy)
     let deliveryFee = 0;
+    let deliveryMessage = "";
+    
     if (subtotal > 0) {
         if (subtotal < 199) {
-            deliveryFee = 49; // High delivery fee for small orders
+            deliveryFee = 49;
+            deliveryMessage = `Add items worth ₹${(199 - subtotal).toFixed(0)} more to reduce delivery fee to ₹29`;
         } else if (subtotal < 399) {
-            deliveryFee = 29; // Medium delivery fee
+            deliveryFee = 29;
+            deliveryMessage = `Add items worth ₹${(399 - subtotal).toFixed(0)} more for FREE delivery!`;
         } else {
-            deliveryFee = 0; // Free delivery for orders above ₹399
+            deliveryFee = 0;
+            deliveryMessage = "🎉 You saved ₹29 on delivery!";
         }
     }
     
@@ -30,6 +35,7 @@ export const calculateCartTotals = (cartItems, quantities) => {
     return {
         subtotal,
         deliveryFee,
+        deliveryMessage,
         platformFee,
         foodGST,
         serviceGST,

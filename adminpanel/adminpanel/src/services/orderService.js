@@ -23,3 +23,13 @@ export const updateOrderStatus = async (orderId, status) => {
         throw error;
     }
 }
+
+export const deleteOrder = async (orderId) => {
+    try {
+        const response = await axios.delete(`${API_URL}/${orderId}`);
+        return response.status === 204;
+    } catch (error) {
+        console.error('Error occurred while deleting the order', error);
+        throw error;
+    }
+}

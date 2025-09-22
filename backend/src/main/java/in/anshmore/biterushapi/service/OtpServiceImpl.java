@@ -34,6 +34,12 @@ public class OtpServiceImpl implements OtpService {
     @Override
     @Transactional
     public void sendOtp(String email, String userName) {
+        // Check if user already exists and is verified
+        var existingUser = userRepository.findByEmail(email);
+        if (existingUser.isPresent() && existingUser.get().getEmailVerified()) {
+            throw new RuntimeException("User already registered and verified. Please login instead.");
+        }
+        
         otpRepository.deleteByEmail(email);
         
         String otp = String.format("%06d", new Random().nextInt(999999));

@@ -37,19 +37,21 @@ public class AuthController {
     
     @PostMapping("/send-otp")
     public ResponseEntity<String> sendOtp(@RequestParam String email, @RequestParam(required = false) String name) {
-        otpService.sendOtp(email, name);
-        return ResponseEntity.ok("OTP sent to email");
+        try {
+            otpService.sendOtp(email, name);
+            return ResponseEntity.ok("OTP sent to email");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
     
     @PostMapping("/verify-otp")
-    // amazonq-ignore-next-line
     public ResponseEntity<String> verifyOtp(@RequestBody OtpRequest request) {
         boolean isValid = otpService.verifyOtp(request.getEmail(), request.getOtp());
         if (isValid) {
             try {
                 userService.verifyEmail(request.getEmail());
             } catch (RuntimeException e) {
-                // User doesn't exist yet - that's okay for registration flow
                 log.debug("User not found during OTP verification: {}", request.getEmail());
             }
             return ResponseEntity.ok("OTP verified successfully");

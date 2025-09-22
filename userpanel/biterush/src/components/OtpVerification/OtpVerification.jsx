@@ -67,7 +67,7 @@ const OtpVerification = () => {
       const response = await registerUser(userData);
       
       if (response.status === 201) {
-        toast.success("Registration completed successfully!");
+        toast.success("Account created successfully. Welcome to BiteRush!");
         navigate("/login");
       } else {
         toast.error("Registration failed. Please try again.");
@@ -86,11 +86,11 @@ const OtpVerification = () => {
   const handleResendOTP = async () => {
     try {
       await sendOTP(userData.email, userData.name);
-      toast.success("OTP resent to your email");
+      toast.success("New verification code sent to your email");
       setCountdown(300);
       setOtp(["", "", "", "", "", ""]);
     } catch (error) {
-      toast.error("Failed to resend OTP");
+      toast.error("Unable to resend code. Please try again");
     }
   };
 

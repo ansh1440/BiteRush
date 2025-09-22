@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { fetchFoodList } from "../service/foodService";
 import axios from "axios";
+import { toast } from "react-toastify";
 import {
   addToCart,
   getCartData,
@@ -18,7 +19,7 @@ export const StoreContextProvider = (props) => {
 
   const increaseQty = async (foodId) => {
     if (!token) {
-      alert('Please login to add items to cart');
+      toast.error('Please login to add items to cart');
       return;
     }
     setQuantities((prev) => ({ ...prev, [foodId]: (prev[foodId] || 0) + 1 }));
@@ -31,6 +32,10 @@ export const StoreContextProvider = (props) => {
   };
 
   const decreaseQty = async (foodId) => {
+    if (!token) {
+      toast.error('Please login to modify cart items');
+      return;
+    }
     setQuantities((prev) => ({
       ...prev,
       [foodId]: prev[foodId] > 0 ? prev[foodId] - 1 : 0,
@@ -45,7 +50,7 @@ export const StoreContextProvider = (props) => {
 
   const removeFromCart = async (foodId) => {
     if (!token) {
-      alert('Please login to remove items from cart');
+      toast.error('Please login to remove items from cart');
       return;
     }
     // Optimistically remove from UI

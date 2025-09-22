@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "./PlaceOrder.css";
 import { assets } from "../../assets/assets";
 import { StoreContext } from "../../context/StoreContext";
@@ -26,6 +26,21 @@ const PlaceOrder = () => {
     zip: "",
   });
 
+  // Extract email from JWT token
+  useEffect(() => {
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const userEmail = payload.sub || payload.email;
+        if (userEmail) {
+          setData(prev => ({ ...prev, email: userEmail }));
+        }
+      } catch (error) {
+        console.error('Error extracting email from token:', error);
+      }
+    }
+  }, [token]);
+
   const onChangeHandler = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -34,7 +49,7 @@ const PlaceOrder = () => {
 
   const cartItems = foodList.filter((food) => quantities[food.id] > 0);
 
-  const { subtotal, deliveryFee, platformFee, totalGST, total } = calculateCartTotals(
+  const { subtotal, deliveryFee, deliveryMessage, platformFee, totalGST, total } = calculateCartTotals(
     cartItems,
     quantities
   );
@@ -103,18 +118,21 @@ const PlaceOrder = () => {
                   </span>
                 </li>
               ))}
-              {deliveryFee > 0 && (
-                <li className="list-group-item d-flex justify-content-between">
-                  <div><span>Delivery Fee</span></div>
-                  <span className="text-body-secondary">&#8377;{deliveryFee.toFixed(2)}</span>
-                </li>
-              )}
-              {subtotal >= 399 && deliveryFee === 0 && (
-                <li className="list-group-item d-flex justify-content-between text-success">
-                  <div><span>Delivery Fee</span></div>
-                  <span className="text-body-secondary"><s>&#8377;29.00</s> FREE</span>
-                </li>
-              )}
+              <li className="list-group-item d-flex justify-content-between">
+                <div>
+                  <span>Delivery Fee</span>
+                  {deliveryMessage && (
+                    <div><small className={deliveryFee === 0 ? "text-success fw-bold" : "text-primary fw-semibold"}>{deliveryMessage}</small></div>
+                  )}
+                </div>
+                <span className={deliveryFee === 0 ? "text-success" : "text-body-secondary"}>
+                  {deliveryFee === 0 ? (
+                    <><s>&#8377;29.00</s> FREE</>
+                  ) : (
+                    `₹${deliveryFee.toFixed(2)}`
+                  )}
+                </span>
+              </li>
               {platformFee > 0 && (
                 <li className="list-group-item d-flex justify-content-between">
                   <div><span>Platform Fee</span></div>
@@ -165,18 +183,19 @@ const PlaceOrder = () => {
                 </div>
 
                 <div className="col-12">
-                  <label htmlFor="email" className="form-label">Email</label>
+                  <label htmlFor="email" className="form-label">Email <small className="text-muted">(Verified account)</small></label>
                   <div className="input-group has-validation">
                     <span className="input-group-text">@</span>
                     <input
                       type="email"
-                      className="form-control"
+                      className="form-control bg-light"
                       id="email"
                       placeholder="Email"
                       required
                       name="email"
                       value={data.email}
-                      onChange={onChangeHandler}
+                      readOnly
+                      style={{ backgroundColor: '#f8f9fa', cursor: 'not-allowed' }}
                     />
                   </div>
                 </div>

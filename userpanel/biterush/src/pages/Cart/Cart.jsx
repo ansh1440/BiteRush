@@ -12,7 +12,7 @@ const Cart = () => {
   const cartItems = foodList.filter((food) => quantities[food.id] > 0);
 
   //calculating
-  const { subtotal, deliveryFee, platformFee, foodGST, serviceGST, totalGST, total } = calculateCartTotals(
+  const { subtotal, deliveryFee, deliveryMessage, platformFee, foodGST, serviceGST, totalGST, total } = calculateCartTotals(
     cartItems,
     quantities
   );
@@ -99,18 +99,21 @@ const Cart = () => {
                 <span>Subtotal</span>
                 <span>&#8377;{subtotal.toFixed(2)}</span>
               </div>
-              {deliveryFee > 0 && (
-                <div className="d-flex justify-content-between mb-3">
+              <div className="d-flex justify-content-between mb-3">
+                <div>
                   <span>Delivery Fee</span>
-                  <span>&#8377;{deliveryFee.toFixed(2)}</span>
+                  {deliveryMessage && (
+                    <div><small className={deliveryFee === 0 ? "text-success fw-bold" : "text-primary fw-semibold"}>{deliveryMessage}</small></div>
+                  )}
                 </div>
-              )}
-              {subtotal >= 399 && deliveryFee === 0 && (
-                <div className="d-flex justify-content-between mb-3 text-success">
-                  <span>Delivery Fee</span>
-                  <span><s>&#8377;29.00</s> FREE</span>
-                </div>
-              )}
+                <span className={deliveryFee === 0 ? "text-success" : ""}>
+                  {deliveryFee === 0 ? (
+                    <><s>&#8377;29.00</s> FREE</>
+                  ) : (
+                    `₹${deliveryFee.toFixed(2)}`
+                  )}
+                </span>
+              </div>
               {platformFee > 0 && (
                 <div className="d-flex justify-content-between mb-3">
                   <span>Platform Fee</span>

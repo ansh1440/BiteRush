@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchAllOrders, updateOrderStatus } from "../../services/orderService";
+import { fetchAllOrders, updateOrderStatus, deleteOrder } from "../../services/orderService";
 import { toast } from "react-toastify";
 import { assets } from "../../assets/assets";
 
@@ -21,6 +21,20 @@ const Orders = () => {
   const updateStatus = async (event, orderId) => {
     const success = await updateOrderStatus(orderId, event.target.value);
     if (success) await fetchOrders();
+  };
+
+  const handleDeleteOrder = async (orderId) => {
+    if (window.confirm('Are you sure you want to delete this order?')) {
+      try {
+        const success = await deleteOrder(orderId);
+        if (success) {
+          toast.success('Order deleted successfully');
+          await fetchOrders();
+        }
+      } catch (error) {
+        toast.error('Failed to delete order');
+      }
+    }
   };
 
   useEffect(() => {
@@ -73,11 +87,20 @@ const Orders = () => {
                         <option value="Delivered">Delivered</option>
                       </select>
                     </td>
+                    <td>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleDeleteOrder(order.id)}
+                        title="Delete Order"
+                      >
+                        <i className="bi bi-trash"></i>
+                      </button>
+                    </td>
                   </tr>
                 );
               }) : (
                 <tr>
-                  <td colSpan="5" className="text-center py-4">
+                  <td colSpan="6" className="text-center py-4">
                     <div className="text-muted">
                       <i className="bi bi-inbox" style={{fontSize: '2rem'}}></i>
                       <p className="mt-2">No orders found</p>

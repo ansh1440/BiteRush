@@ -9,6 +9,7 @@ const Login = () => {
   const { setToken, loadCartData } = useContext(StoreContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -44,17 +45,17 @@ const Login = () => {
         setToken(response.data.token);
         localStorage.setItem("token", response.data.token);
         await loadCartData(response.data.token);
-        toast.success("Login successful!");
+        toast.success("Login successful. Welcome back!");
         navigate("/");
       } else {
-        toast.error("Unable to login. Please try again.");
+        toast.error("Login failed. Please check your credentials");
       }
     } catch (error) {
       console.error("Login error:", error);
-      if (error.response) {
-        toast.error(`Login failed: ${error.response.data.message || error.response.statusText}`);
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        toast.error("Invalid email or password");
       } else if (error.request) {
-        toast.error("Network error. Please check if the server is running.");
+        toast.error("Network error. Please check your connection");
       } else {
         toast.error("Unable to login. Please try again");
       }
@@ -63,9 +64,7 @@ const Login = () => {
     }
   };
 
-  const resetForm = () => {
-    setData({ email: "", password: "" });
-  };
+
   return (
     <div className="login-container">
       <div className="row">
@@ -88,9 +87,9 @@ const Login = () => {
                   />
                   <label htmlFor="floatingInput">Email address</label>
                 </div>
-                <div className="form-floating mb-3">
+                <div className="form-floating mb-3 position-relative">
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     className="form-control"
                     id="floatingPassword"
                     placeholder="Password"
@@ -99,6 +98,21 @@ const Login = () => {
                     value={data.password}
                   />
                   <label htmlFor="floatingPassword">Password</label>
+                  <button
+                    type="button"
+                    className="position-absolute top-50 end-0 translate-middle-y me-2"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{ 
+                      border: 'none', 
+                      background: 'none', 
+                      zIndex: 10,
+                      color: '#6c757d',
+                      cursor: 'pointer',
+                      padding: '0.25rem'
+                    }}
+                  >
+                    <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                  </button>
                 </div>
 
                 <div className="d-grid">
@@ -109,17 +123,10 @@ const Login = () => {
                   >
                     {loading ? (
                       <>
-                        <div className="loading-spinner" style={{width: '20px', height: '20px', marginRight: '10px', display: 'inline-block'}}></div>
-                        Please wait
+                        <span className="spinner-border spinner-border-sm me-2"></span>
+                        Signing in...
                       </>
                     ) : 'Sign in'}
-                  </button>
-                  <button
-                    className="btn btn-outline-danger btn-login text-uppercase mt-2"
-                    type="button"
-                    onClick={resetForm}
-                  >
-                    Reset
                   </button>
                 </div>
                 <div className="mt-4">
