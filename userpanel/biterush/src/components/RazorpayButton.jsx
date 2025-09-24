@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { orderService } from "../service/orderService";
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const RazorpayButton = ({ orderAmount, orderDetails, onPaymentSuccess }) => {
+
   const [isProcessing, setIsProcessing] = useState(false);
 
   const loadRazorpay = () => {
@@ -20,6 +21,7 @@ const RazorpayButton = ({ orderAmount, orderDetails, onPaymentSuccess }) => {
   };
 
   const handlePayment = async () => {
+
     setIsProcessing(true);
     
     const res = await loadRazorpay();
@@ -35,56 +37,41 @@ const RazorpayButton = ({ orderAmount, orderDetails, onPaymentSuccess }) => {
         throw new Error('Please login first');
       }
 
+      // Create Razorpay order via backend
+
+      const orderResponse = await axios.post('http://localhost:8080/api/orders/razorpay/create', {
+        amount: parseFloat(orderAmount)
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+
+      const { orderId, key, amount, currency } = orderResponse.data;
+
       const options = {
-        key: 'rzp_test_y1gUp0bdv168FC',
-        amount: Math.round(parseFloat(orderAmount) * 100),
-        currency: 'INR',
+        key: key,
+        amount: amount,
+        currency: currency,
+        order_id: orderId,
         name: 'BiteRush',
         description: 'Food Order Payment',
-        config: {
-          display: {
-            blocks: {
-              banks: {
-                name: 'Pay using ' + 'UPI/Cards/Netbanking',
-                instruments: [
-                  {
-                    method: 'card'
-                  },
-                  {
-                    method: 'upi'
-                  }
-                ]
-              }
-            },
-            sequence: ['block.banks'],
-            preferences: {
-              show_default_blocks: true
-            }
-          }
-        },
         handler: async function (response) {
           try {
-            if (!token) {
-              throw new Error('Authentication token missing');
-            }
+            // Verify payment and create order
+            await axios.post('http://localhost:8080/api/orders/razorpay/verify', {
+              razorpayOrderId: response.razorpay_order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
+              orderDetails: orderDetails
+            }, {
+              headers: { Authorization: `Bearer ${token}` }
+            });
             
-            const orderData = {
-              ...orderDetails,
-              razorpayPaymentId: response.razorpay_payment_id || 'test_payment_' + Date.now(),
-              paymentStatus: "PAID"
-            };
-            
-            console.log('Creating order with token:', token.substring(0, 20) + '...');
-            await orderService.createOrder(orderData, token);
             toast.success("Payment successful! Order placed.");
             onPaymentSuccess();
           } catch (error) {
-            console.error('Order creation error:', error);
-            if (error.response?.status === 401 || error.response?.status === 403) {
-              toast.error("Authentication failed. Please login again.");
-            } else {
-              toast.error("Payment successful but order creation failed. Please contact support.");
-            }
+            console.error('Payment verification error:', error);
+            toast.error("Payment verification failed. Please contact support.");
           }
         },
         modal: {

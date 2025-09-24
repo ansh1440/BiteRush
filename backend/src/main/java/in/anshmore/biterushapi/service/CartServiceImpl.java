@@ -54,16 +54,23 @@ public class CartServiceImpl implements CartService{
     public CartResponse removeFromCart(CartRequest cartRequest) {
         String loggedInUserId = userService.findByUserId();
         Long userId = Long.parseLong(loggedInUserId);
+        System.out.println("Removing from cart - UserId: " + userId + ", FoodId: " + cartRequest.getFoodId());
+        
         CartEntity entity = cartRespository.findByUserIdWithItems(userId)
                 .orElseThrow(() -> new RuntimeException("Cart is not found"));
         Map<String, Integer> cartItems = entity.getItems();
+        
         if (cartItems.containsKey(cartRequest.getFoodId())) {
             int currentQty = cartItems.get(cartRequest.getFoodId());
+            System.out.println("Current quantity: " + currentQty);
+            
             if (currentQty > 1) {
                 // Decrease quantity using direct SQL
+                System.out.println("Decreasing quantity to: " + (currentQty - 1));
                 cartRespository.updateCartItemQuantity(entity.getId(), cartRequest.getFoodId(), currentQty - 1);
             } else {
                 // Delete item using direct SQL
+                System.out.println("Deleting item from cart");
                 cartRespository.deleteCartItem(entity.getId(), cartRequest.getFoodId());
             }
             // Clear EntityManager cache to force refresh
