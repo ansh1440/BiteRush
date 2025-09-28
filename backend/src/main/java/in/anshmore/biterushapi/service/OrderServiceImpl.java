@@ -25,6 +25,12 @@ public class OrderServiceImpl implements OrderService{
 
     @Autowired
     private CartRespository cartRespository;
+    
+    @Autowired
+    private RefundService refundService;
+    
+    @Autowired
+    private FundAccountService fundAccountService;
 
 
 
@@ -47,6 +53,19 @@ public class OrderServiceImpl implements OrderService{
             if ("PAID".equals(newOrder.getPaymentStatus())) {
                 try {
                     cartRespository.deleteByUserId(newOrder.getUserId());
+                    
+                    // Update restaurant earnings (85% of order amount, 15% platform commission)
+                    Long restaurantId = 1L;
+                    Double restaurantShare = Math.round(newOrder.getAmount() * 0.85 * 100.0) / 100.0;
+                    
+                    // Create account if not exists, then update earnings
+                    fundAccountService.createRestaurantAccount(restaurantId, 
+                        "BiteRush Restaurant", "1234567890", "SBIN0001234", "State Bank of India");
+                    
+                    // Update earnings
+                    fundAccountService.updateEarnings(restaurantId, restaurantShare);
+                    log.info("Updated restaurant {} earnings with amount {}", restaurantId, restaurantShare);
+                    
                 } catch (Exception e) {
                     log.warn("Cart clearing failed: {}", e.getMessage());
                 }
@@ -84,6 +103,36 @@ public class OrderServiceImpl implements OrderService{
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         entity.setOrderStatus(status);
         orderRepository.save(entity);
+    }
+    
+    @Override
+    public void cancelOrder(String orderId) {
+        OrderEntity entity = orderRepository.findById(Long.parseLong(orderId))
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        
+        // Check if order can be cancelled
+        if (!"Placed".equals(entity.getOrderStatus()) && !"Preparing".equals(entity.getOrderStatus())) {
+            throw new RuntimeException("Order cannot be cancelled at this stage");
+        }
+        
+        if (!"PAID".equals(entity.getPaymentStatus())) {
+            throw new RuntimeException("Only paid orders can be cancelled");
+        }
+        
+        // Update order status to cancelled
+        entity.setOrderStatus("Cancelled");
+        entity.setIsRefunded(true);
+        orderRepository.save(entity);
+        
+        // Create refund record
+        refundService.initiateRefund(Long.parseLong(orderId), "Order cancelled by customer");
+        
+        // Reverse restaurant earnings (deduct the amount that was added)
+        Long restaurantId = 1L; // Same restaurant ID used during order creation
+        Double restaurantShare = Math.round(entity.getAmount() * 0.85 * 100.0) / 100.0; // Same calculation as when order was placed
+        fundAccountService.updateEarnings(restaurantId, -restaurantShare); // Negative amount to deduct
+        
+        log.info("Order {} cancelled successfully. Refund will be processed. Restaurant earnings reversed.", orderId);
     }
 
     private OrderResponse convertToResponse(OrderEntity newOrder) {

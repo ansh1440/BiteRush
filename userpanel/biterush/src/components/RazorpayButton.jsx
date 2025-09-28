@@ -84,7 +84,7 @@ const RazorpayButton = ({ orderAmount, orderDetails, onPaymentSuccess }) => {
           contact: orderDetails.phoneNumber.replace(/[^0-9]/g, '').substring(0, 10)
         },
         theme: {
-          color: '#3399cc'
+          color: '#ff6600'  // Swiggy-like orange color
         }
       };
 
@@ -105,8 +105,8 @@ const RazorpayButton = ({ orderAmount, orderDetails, onPaymentSuccess }) => {
         onClick={handlePayment}
         disabled={isProcessing}
         style={{ 
-          backgroundColor: '#3399cc', 
-          borderColor: '#3399cc',
+          backgroundColor: '#ff6600', 
+          borderColor: '#ff6600',
           padding: '12px 24px',
           fontSize: '16px',
           fontWeight: 'bold'

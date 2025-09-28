@@ -21,10 +21,37 @@ const AddFood = () => {
 
     const onSubmitHandler = async (event) => {
         event.preventDefault();
-        if (!image) {
-            toast.error('Please select an image.');
+        
+        // Validation
+        if (!data.name.trim()) {
+            toast.error('Food name is required');
             return;
         }
+        if (data.name.length < 3) {
+            toast.error('Food name must be at least 3 characters');
+            return;
+        }
+        if (!data.description.trim()) {
+            toast.error('Description is required');
+            return;
+        }
+        if (data.description.length < 10) {
+            toast.error('Description must be at least 10 characters');
+            return;
+        }
+        if (!data.price || data.price <= 0) {
+            toast.error('Please enter a valid price');
+            return;
+        }
+        if (data.price > 10000) {
+            toast.error('Price cannot exceed ₹10,000');
+            return;
+        }
+        if (!image) {
+            toast.error('Please select an image');
+            return;
+        }
+        
         try {
             await addFood(data, image);
             toast.success('Food added successfully.');

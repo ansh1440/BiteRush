@@ -82,4 +82,13 @@ public class OrderController {
     public void updateOrderStatus(@PathVariable String orderId, @RequestParam String status) {
         orderService.updateOrderStatus(orderId, status);
     }
+    
+    // Cancel order endpoint
+    @PostMapping("/{orderId}/cancel")
+    @ResponseStatus(HttpStatus.OK)
+    public void cancelOrder(@PathVariable String orderId) {
+        log.info("Received order cancellation request for order ID: {}", orderId);
+        orderService.cancelOrder(orderId);
+        log.info("Order {} cancelled successfully", orderId);
+    }
 }

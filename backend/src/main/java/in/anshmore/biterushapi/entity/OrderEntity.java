@@ -54,5 +54,13 @@ public class OrderEntity {
 
     @Column(name = "razorpay_payment_id")
     private String razorpayPaymentId;
+    
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean isRefundable = true;
+    
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean isRefunded = false;
 
 }

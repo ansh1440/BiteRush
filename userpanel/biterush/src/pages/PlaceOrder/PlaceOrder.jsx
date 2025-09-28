@@ -26,6 +26,36 @@ const PlaceOrder = () => {
     zip: "",
   });
 
+  const [errors, setErrors] = useState({});
+
+  const validateField = (name, value) => {
+    let error = "";
+    switch (name) {
+      case "firstName":
+      case "lastName":
+        if (!value.trim()) error = "This field is required";
+        else if (value.length < 2) error = "Must be at least 2 characters";
+        break;
+      case "phoneNumber":
+        if (!value) error = "Phone number is required";
+        else if (!/^[0-9]{10}$/.test(value)) error = "Must be 10 digits";
+        break;
+      case "address":
+        if (!value.trim()) error = "Address is required";
+        else if (value.length < 10) error = "Please enter complete address";
+        break;
+      case "zip":
+        if (!value) error = "Pincode is required";
+        else if (!/^[0-9]{6}$/.test(value)) error = "Must be 6 digits";
+        break;
+      case "state":
+      case "city":
+        if (!value) error = "Please select an option";
+        break;
+    }
+    return error;
+  };
+
   // Extract email from JWT token
   useEffect(() => {
     if (token) {
@@ -45,6 +75,10 @@ const PlaceOrder = () => {
     const name = event.target.name;
     const value = event.target.value;
     setData((data) => ({ ...data, [name]: value }));
+    
+    // Validate field and update errors
+    const error = validateField(name, value);
+    setErrors(prev => ({ ...prev, [name]: error }));
   };
 
   const cartItems = foodList.filter((food) => quantities[food.id] > 0);
@@ -158,7 +192,7 @@ const PlaceOrder = () => {
                   <label htmlFor="firstName" className="form-label">First name</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className={`form-control ${errors.firstName ? 'is-invalid' : ''}`}
                     id="firstName"
                     placeholder="John"
                     required
@@ -166,13 +200,14 @@ const PlaceOrder = () => {
                     onChange={onChangeHandler}
                     value={data.firstName}
                   />
+                  {errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
                 </div>
 
                 <div className="col-sm-6">
                   <label htmlFor="lastName" className="form-label">Last name</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className={`form-control ${errors.lastName ? 'is-invalid' : ''}`}
                     id="lastName"
                     placeholder="Doe"
                     required
@@ -180,6 +215,7 @@ const PlaceOrder = () => {
                     value={data.lastName}
                     onChange={onChangeHandler}
                   />
+                  {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
                 </div>
 
                 <div className="col-12">
@@ -204,7 +240,7 @@ const PlaceOrder = () => {
                   <label htmlFor="phone" className="form-label">Phone Number</label>
                   <input
                     type="number"
-                    className="form-control"
+                    className={`form-control ${errors.phoneNumber ? 'is-invalid' : ''}`}
                     id="phone"
                     placeholder="9876543210"
                     required
@@ -212,13 +248,14 @@ const PlaceOrder = () => {
                     value={data.phoneNumber}
                     onChange={onChangeHandler}
                   />
+                  {errors.phoneNumber && <div className="invalid-feedback">{errors.phoneNumber}</div>}
                 </div>
 
                 <div className="col-12">
                   <label htmlFor="address" className="form-label">Address</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className={`form-control ${errors.address ? 'is-invalid' : ''}`}
                     id="address"
                     placeholder="1234 Main St"
                     required
@@ -226,12 +263,13 @@ const PlaceOrder = () => {
                     value={data.address}
                     onChange={onChangeHandler}
                   />
+                  {errors.address && <div className="invalid-feedback">{errors.address}</div>}
                 </div>
 
                 <div className="col-md-5">
                   <label htmlFor="state" className="form-label">State</label>
                   <select
-                    className="form-select"
+                    className={`form-select ${errors.state ? 'is-invalid' : ''}`}
                     id="state"
                     required
                     name="state"
@@ -248,12 +286,13 @@ const PlaceOrder = () => {
                     <option>Uttar Pradesh</option>
                     <option>West Bengal</option>
                   </select>
+                  {errors.state && <div className="invalid-feedback">{errors.state}</div>}
                 </div>
 
                 <div className="col-md-4">
                   <label htmlFor="city" className="form-label">City</label>
                   <select
-                    className="form-select"
+                    className={`form-select ${errors.city ? 'is-invalid' : ''}`}
                     id="city"
                     required
                     name="city"
@@ -270,13 +309,14 @@ const PlaceOrder = () => {
                     <option>Kolkata</option>
                     <option>Ahmedabad</option>
                   </select>
+                  {errors.city && <div className="invalid-feedback">{errors.city}</div>}
                 </div>
 
                 <div className="col-md-3">
                   <label htmlFor="zip" className="form-label">Pincode</label>
                   <input
                     type="number"
-                    className="form-control"
+                    className={`form-control ${errors.zip ? 'is-invalid' : ''}`}
                     id="zip"
                     placeholder="560001"
                     required
@@ -284,6 +324,7 @@ const PlaceOrder = () => {
                     value={data.zip}
                     onChange={onChangeHandler}
                   />
+                  {errors.zip && <div className="invalid-feedback">{errors.zip}</div>}
                 </div>
               </div>
 
